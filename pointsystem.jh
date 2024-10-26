@@ -1,0 +1,150 @@
+entity Actor {
+  actorID Long,
+  username String required,
+  avatar String,
+  points Integer,
+  level String,
+  rank Integer,
+  pointHistory TextBlob,
+  description String,
+  firstName String required,
+  lastName String required,
+  email String required,
+  password String required,
+  dateOfBirth Instant,
+  login String required,
+  facebookId String,
+  coupon Long,
+  created Instant,
+  modified Instant,
+  status Boolean,
+  flagSupression Boolean
+}
+
+entity Role {
+  roleID Long,
+  name String required,
+  description String
+}
+
+entity Habilitation {
+  habilitationID Long,
+  name String required,
+  description String
+}
+
+entity Project {
+  projectID Long,
+  title String required,
+  description TextBlob,
+  pointValue Integer required,
+  deadline ZonedDateTime,
+  status String
+}
+
+entity Historique {
+  historiqueID Long,
+  action String required,
+  timestamp ZonedDateTime required,
+  details TextBlob
+}
+
+entity Level {
+  levelID Long,
+  name String required,
+  minPoints Integer,
+  maxPoints Integer
+}
+
+entity Marketplace {
+  id Long
+}
+
+entity Item {
+  itemID Long,
+  name String required,
+  category String required,
+  price Integer required
+}
+
+entity Badge {
+  badgeID Long,
+  title String required,
+  requirement String
+}
+
+entity RewardSystem {
+  id Long,
+  milestones TextBlob,
+  competitions TextBlob
+}
+
+entity PointTransaction {
+  transactionID Long,
+  amount Integer required,
+  timestamp ZonedDateTime required
+}
+
+relationship OneToMany {
+  Actor to Project
+}
+
+relationship ManyToOne {
+  Project to Actor {assignedActor}
+}
+
+relationship ManyToMany {
+  Actor to Item
+}
+
+relationship OneToMany {
+  Actor to PointTransaction {sender} 
+  Actor to PointTransaction {recipient}
+}
+
+relationship OneToOne {
+  Actor to Level
+  Actor to Badge
+}
+
+relationship ManyToOne {
+  Item to Marketplace
+}
+
+relationship ManyToMany {
+  Actor to Role
+}
+
+relationship ManyToMany {
+  Role to Habilitation
+}
+
+relationship OneToMany {
+  Project to Historique
+}
+
+relationship ManyToOne {
+  RewardSystem to Level
+}
+
+relationship OneToMany {
+  RewardSystem to Actor
+}
+
+
+
+
+// Set pagination options
+paginate Actor with infinite-scroll
+paginate Project with infinite-scroll
+paginate Item with infinite-scroll
+
+// Use Data Transfer Objects (DTO)
+ dto Project with mapstruct
+ dto Actor with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+
+// Set an angular suffix
+ angularSuffix * with admi
