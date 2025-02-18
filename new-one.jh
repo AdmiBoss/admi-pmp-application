@@ -1,0 +1,70 @@
+// User entity
+entity User {
+    userId Long required,
+    username String required,
+    avatar ImageBlob,
+    totalPoints Integer required,
+    description String,
+    level Level required
+}
+
+// Level entity
+entity Level {
+    levelName String required,
+    minPoints Integer required,
+    maxPoints Integer required
+}
+
+// Project entity
+entity Project {
+    projectId Long required,
+    projectName String required,
+    deadline Instant required,
+    pointsReward Integer required
+}
+
+// MarketplaceItem entity
+entity MarketplaceItem {
+    itemId Long required,
+    itemName String required,
+    itemType String required,
+    cost Integer required
+}
+
+// Leaderboard entity
+entity Leaderboard {
+    leaderboardId Long required
+}
+
+// Transaction entity
+entity Transaction {
+    transactionId Long required,
+    amount Integer required,
+    date Instant required
+}
+
+// Relationships between entities
+relationship OneToOne {
+    User{level} to Level
+}
+
+relationship OneToMany {
+    User{transaction} to Transaction{user},
+    User{project} to Project{user},
+    User{marketplaceItem} to MarketplaceItem{user},
+    Leaderboard{user} to User{leaderboard}
+}
+
+relationship ManyToOne {
+    Transaction{user} to User,
+    Project{user} to User,
+    MarketplaceItem{user} to User,
+    User{leaderboard} to Leaderboard
+}
+
+// Pagination and DTO options
+paginate User, Level, Project, MarketplaceItem, Leaderboard, Transaction with pagination
+dto User, Level, Project, MarketplaceItem, Leaderboard, Transaction with mapstruct
+
+// Service options
+service User, Level, Project, MarketplaceItem, Leaderboard, Transaction with serviceClass
